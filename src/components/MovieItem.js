@@ -66,38 +66,6 @@ function MovieItem({
                 {vote_average}/10
               </Text>
             </View>
-            {/* <View style={{flexDirection: 'row', marginTop: 4}}>
-              <Text
-                style={{
-                  marginHorizontal: 5,
-                  fontSize: 13,
-                  backgroundColor: '#e8e8e8',
-                  width: 60,
-                  textAlign: 'center',
-                }}>
-                Action
-              </Text>
-              <Text
-                style={{
-                  marginHorizontal: 5,
-                  fontSize: 13,
-                  backgroundColor: '#e8e8e8',
-                  width: 60,
-                  textAlign: 'center',
-                }}>
-                Sci/Fi
-              </Text>
-              <Text
-                style={{
-                  marginHorizontal: 5,
-                  fontSize: 13,
-                  backgroundColor: '#e8e8e8',
-                  width: 60,
-                  textAlign: 'center',
-                }}>
-                Adventure
-              </Text>
-            </View> */}
           </View>
         </View>
       </Card>

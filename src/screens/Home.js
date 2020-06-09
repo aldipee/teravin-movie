@@ -5,12 +5,11 @@ import {
   FlatList,
   Text,
   ScrollView,
-  ToastAndroid,
   SafeAreaView,
 } from 'react-native';
 import {Card, Button, Overlay} from 'react-native-elements';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import Modal from 'react-native-modal';
+
 import {Header} from 'react-native-elements';
 import {connect} from 'react-redux';
 
@@ -79,7 +78,7 @@ function Home(props) {
     props.getAllMovies(currentPage);
     setTimeout(() => {
       setShowModal(true);
-    }, 60000);
+    }, 10000);
   }, [currentPage]);
 
   return (
@@ -107,53 +106,7 @@ function Home(props) {
           <Loading />
         ) : (
           <>
-            {/* <Modal
-              style={{margin: 0}}
-              coverScreen={true}
-              transparent={true}
-              visible={false}>
-              <View style={{flex: 1}}>
-                <View
-                  style={{
-                    margin: 0,
-                    position: 'absolute',
-                    bottom: 0,
-                    width: '100%',
-                    backgroundColor: 'white',
-                    padding: 20,
-                    alignItems: 'center',
-                    shadowColor: '#000',
-                    shadowOffset: {
-                      width: 0,
-                      height: 12,
-                    },
-                    shadowOpacity: 0.58,
-                    shadowRadius: 16.0,
-
-                    elevation: 24,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-around',
-                    }}>
-                    <Text>Data updated</Text>
-                    <Button title={'Show data'} onPress={handleShowData} />
-                  </View>
-                </View>
-              </View>
-            </Modal> */}
             <ScrollView>
-              {/* {props.movies.results.map((item) => (
-                <TouchableOpacity
-                  activeOpacity={0.5}
-                  key={item.id}
-                  onPress={() =>
-                    props.navigation.navigate('MovieDetail', {id: item.id})
-                  }>
-                  <MovieItem {...item} key={item.id} />
-                </TouchableOpacity>
-              ))} */}
               <FlatList
                 initialNumToRender={10}
                 data={props.movies.results}

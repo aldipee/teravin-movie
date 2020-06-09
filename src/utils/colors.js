@@ -4,4 +4,5 @@ export const colors = {
   THIRD_GREY: '#dbdbdb',
   WHITE: '#FFF',
   GREEN: '#61a336',
+  BLUE: '#0000ff',
 };
