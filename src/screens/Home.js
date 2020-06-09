@@ -1,82 +1,236 @@
 import React from 'react';
-import {View, ScrollView, TouchableOpacity} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  FlatList,
+  Text,
+  ScrollView,
+  ToastAndroid,
+  SafeAreaView,
+} from 'react-native';
+import {Card, Button, Overlay} from 'react-native-elements';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import Modal from 'react-native-modal';
 import {Header} from 'react-native-elements';
+import {connect} from 'react-redux';
+
+import {getAllMovies} from '../redux/actions/movie';
 import MovieItem from '../components/MovieItem';
 function Home(props) {
-  const list = [
-    {
-      popularity: 122.055,
-      vote_count: 2537,
-      video: false,
-      poster_path: '/8WUVHemHFH2ZIP6NWkwlHWsyrEL.jpg',
-      id: 338762,
-      adult: false,
-      backdrop_path: '/ocUrMYbdjknu2TwzMHKT9PBBQRw.jpg',
-      original_language: 'en',
-      original_title: 'Bloodshot',
-      genre_ids: [28, 878],
-      title: 'Bloodshot',
-      vote_average: 7,
-      overview:
-        "After he and his wife are murdered, marine Ray Garrison is resurrected by a team of scientists. Enhanced with nanotechnology, he becomes a superhuman, biotech killing machine—'Bloodshot'. As Ray first trains with fellow super-soldiers, he cannot recall anything from his former life. But when his memories flood back and he remembers the man that killed both him and his wife, he breaks out of the facility to get revenge, only to discover that there's more to the conspiracy than he thought.",
-      release_date: '2020-03-05',
-    },
-    {
-      popularity: 124.024,
-      vote_count: 7772,
-      video: false,
-      poster_path: '/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg',
-      id: 496243,
-      adult: false,
-      backdrop_path: '/ApiBzeaa95TNYliSbQ8pJv4Fje7.jpg',
-      original_language: 'ko',
-      original_title: '기생충',
-      genre_ids: [35, 18, 53],
-      title: 'Parasite',
-      vote_average: 8.5,
-      overview:
-        "All unemployed, Ki-taek's family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.",
-      release_date: '2019-05-30',
-    },
-    {
-      popularity: 100.849,
-      vote_count: 794,
-      video: false,
-      poster_path: '/wxPhn4ef1EAo5njxwBkAEVrlJJG.jpg',
-      id: 514847,
-      adult: false,
-      backdrop_path: '/naXUDz0VGK7aaPlEpsuYW8kNVsr.jpg',
-      original_language: 'en',
-      original_title: 'The Hunt',
-      genre_ids: [28, 27, 53],
-      title: 'The Hunt',
-      vote_average: 6.7,
-      overview:
-        "Twelve strangers wake up in a clearing. They don't know where they are—or how they got there. In the shadow of a dark internet conspiracy theory, ruthless elitists gather at a remote location to hunt humans for sport. But their master plan is about to be derailed when one of the hunted turns the tables on her pursuers.",
-      release_date: '2020-03-11',
-    },
-  ];
-  return (
-    <ScrollView>
-      <View>
-        <Header
-          containerStyle={{height: 60, paddingTop: 0}}
-          placement="left"
-          leftComponent={{icon: 'menu', color: '#fff'}}
-          centerComponent={{text: 'MY TITLE', style: {color: '#fff'}}}
-          rightComponent={{icon: 'home', color: '#fff'}}
-        />
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [showModal, setShowModal] = React.useState(false);
 
-        <View>
-          {list.map((item) => (
-            <TouchableOpacity
-              onPress={() => props.navigation.navigate('MovieDetail')}>
-              <MovieItem {...item} />
-            </TouchableOpacity>
-          ))}
-        </View>
+  const handleShowData = () => {
+    setCurrentPage(currentPage + 1);
+    setShowModal(false);
+  };
+  const Loading = (total) => {
+    return Array.from(Array(4).keys()).map((data) => (
+      <Card
+        containerStyle={{
+          marginHorizontal: 5,
+          marginVertical: 5,
+          paddingHorizontal: 5,
+          paddingVertical: 5,
+          borderWidth: 0,
+          borderRadius: 4,
+        }}>
+        <SkeletonPlaceholder>
+          <SkeletonPlaceholder.Item flexDirection="row" alignItems="center">
+            <SkeletonPlaceholder.Item
+              width={100}
+              height={130}
+              borderRadius={0}
+            />
+
+            <SkeletonPlaceholder.Item marginLeft={20}>
+              <SkeletonPlaceholder.Item
+                width={180}
+                height={20}
+                borderRadius={4}
+              />
+
+              <SkeletonPlaceholder.Item
+                marginTop={6}
+                width={120}
+                height={20}
+                borderRadius={4}
+              />
+              <SkeletonPlaceholder.Item
+                marginTop={6}
+                width={120}
+                height={20}
+                borderRadius={4}
+              />
+              <SkeletonPlaceholder.Item
+                marginTop={6}
+                width={120}
+                height={20}
+                borderRadius={4}
+              />
+            </SkeletonPlaceholder.Item>
+          </SkeletonPlaceholder.Item>
+        </SkeletonPlaceholder>
+      </Card>
+    ));
+  };
+
+  React.useEffect(() => {
+    props.getAllMovies(currentPage);
+    setTimeout(() => {
+      setShowModal(true);
+    }, 60000);
+  }, [currentPage]);
+
+  return (
+    <SafeAreaView>
+      <Header
+        containerStyle={{
+          height: 60,
+          paddingTop: 0,
+          backgroundColor: '#fff',
+          marginBottom: '3%',
+          borderBottomWidth: 1,
+          borderBottomColor: '#dbdbdb',
+        }}
+        placement="left"
+        leftComponent={{icon: 'menu', color: '#6e6e6e'}}
+        centerComponent={{
+          text: 'Teravin Movie',
+          style: {color: '#6e6e6e', fontWeight: 'bold', fontSize: 17},
+        }}
+        rightComponent={{icon: 'home', color: '#6e6e6e'}}
+      />
+
+      <View>
+        {props.isLoading ? (
+          <Loading />
+        ) : (
+          <>
+            {/* <Modal
+              style={{margin: 0}}
+              coverScreen={true}
+              transparent={true}
+              visible={false}>
+              <View style={{flex: 1}}>
+                <View
+                  style={{
+                    margin: 0,
+                    position: 'absolute',
+                    bottom: 0,
+                    width: '100%',
+                    backgroundColor: 'white',
+                    padding: 20,
+                    alignItems: 'center',
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 12,
+                    },
+                    shadowOpacity: 0.58,
+                    shadowRadius: 16.0,
+
+                    elevation: 24,
+                  }}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-around',
+                    }}>
+                    <Text>Data updated</Text>
+                    <Button title={'Show data'} onPress={handleShowData} />
+                  </View>
+                </View>
+              </View>
+            </Modal> */}
+            <ScrollView>
+              {/* {props.movies.results.map((item) => (
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  key={item.id}
+                  onPress={() =>
+                    props.navigation.navigate('MovieDetail', {id: item.id})
+                  }>
+                  <MovieItem {...item} key={item.id} />
+                </TouchableOpacity>
+              ))} */}
+              <FlatList
+                initialNumToRender={10}
+                data={props.movies.results}
+                keyExtractor={(item) => item.id}
+                renderItem={({item}) => (
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    key={item.id}
+                    onPress={() =>
+                      props.navigation.navigate('MovieDetail', {id: item.id})
+                    }>
+                    <MovieItem {...item} key={item.id} />
+                  </TouchableOpacity>
+                )}
+              />
+            </ScrollView>
+          </>
+        )}
       </View>
-    </ScrollView>
+      {showModal ? (
+        <View
+          style={{
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 100,
+            },
+
+            shadowOpacity: 0.8,
+            shadowRadius: 12.35,
+
+            elevation: 14,
+            height: 60,
+            backgroundColor: '#fff',
+            position: 'absolute',
+            bottom: '10%',
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <View style={{width: 300}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}>
+              <Text style={{fontWeight: 'bold', fontSize: 16, width: '50%'}}>
+                Data has been updated!
+              </Text>
+              <Button
+                containerStyle={{margin: 0}}
+                titleStyle={{fontSize: 14}}
+                title="Show data"
+                onPress={handleShowData}
+              />
+              <Button
+                containerStyle={{margin: 0, width: '20%'}}
+                titleStyle={{fontSize: 14}}
+                title="Later"
+                onPress={() => setShowModal(false)}
+                type="outline"
+              />
+            </View>
+          </View>
+        </View>
+      ) : null}
+    </SafeAreaView>
   );
 }
-export default Home;
+
+const mapStateToProps = (state) => ({
+  movies: state.listMovies.movies,
+  isLoading: state.listMovies.isLoading,
+});
+
+const mapDispatchToProps = {getAllMovies};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
