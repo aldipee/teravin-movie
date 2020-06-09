@@ -2,6 +2,7 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import NetInfo from '@react-native-community/netinfo';
 import {PersistGate} from 'redux-persist/integration/react';
+import SplashScreen from 'react-native-splash-screen';
 import {View, Text} from 'react-native';
 
 import Index from './src/index';
@@ -9,6 +10,7 @@ import {store, persistor} from './src/redux/store';
 const App = () => {
   const [isInternetReachable, setisInternetReachable] = React.useState(false);
   React.useEffect(() => {
+    SplashScreen.hide();
     const unsubscribe = NetInfo.addEventListener((state) => {
       setisInternetReachable(state.isInternetReachable);
     });
