@@ -7,7 +7,7 @@ workflows:
     environment:
       node: latest
     scripts:
-      - npm install
+      - sudo npm install
       - echo "sdk.dir=$HOME/programs/android-sdk-macosx" > "$FCI_BUILD_DIR/android/local.properties"
       - |
         # build Android
